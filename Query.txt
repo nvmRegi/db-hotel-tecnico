@@ -62,3 +62,8 @@ WHERE floor = 1;
 11. Le stanze sono state tutte prenotate almeno una volta? (Visualizzare le stanze
 non ancora prenotate) - BONUS
 
+SELECT stanze.id, COUNT(stanza_id) AS numero_prenotazioni
+FROM stanze
+LEFT JOIN prenotazioni ON stanze.id = stanza_id
+GROUP BY stanze.id
+HAVING COUNT(stanza_id) = 0;
