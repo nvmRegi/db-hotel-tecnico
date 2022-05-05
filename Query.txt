@@ -53,3 +53,12 @@ JOIN prenotazioni_has_ospiti ON ospiti.id = ospite_id;
 
 10. Fai la somma di tutti i prezzi delle prenotazioni per le stanze del primo piano
 
+SELECT SUM(price) AS prezzo_prenotazioni_stanze_primo_piano
+FROM pagamenti
+JOIN prenotazioni ON prenotazione_id = prenotazioni.id
+JOIN stanze ON stanza_id = stanze.id
+WHERE floor = 1;
+
+11. Le stanze sono state tutte prenotate almeno una volta? (Visualizzare le stanze
+non ancora prenotate) - BONUS
+
