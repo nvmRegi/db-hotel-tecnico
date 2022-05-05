@@ -1,0 +1,63 @@
+CREATE TABLE [dbo].[Reservations] (
+    [Id]      INT  IDENTITY (1, 1) NOT NULL,
+    [room_id] INT  NOT NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [FK_Reservations_ToTable] FOREIGN KEY ([room_id]) REFERENCES [dbo].[Rooms] ([Id])
+);
+
+CREATE TABLE [dbo].[Rooms] (
+    [Id]          INT     IDENTITY (1, 1) NOT NULL,
+    [room_number] TINYINT NOT NULL,
+    [floor]       TINYINT NOT NULL,
+    [beds_number] TINYINT NOT NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+
+CREATE TABLE [dbo].[Guests]
+(
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY, 
+	[reservation_id] int NOT NULL,
+    [name] VARCHAR(50) NOT NULL, 
+    [surname] VARCHAR(50) NOT NULL, 
+    [date_of_birth] DATE NOT NULL, 
+    [document_type] VARCHAR(50) NOT NULL, 
+    [document_number] INT NOT NULL, 
+    CONSTRAINT [FK_Guests_ToTable] FOREIGN KEY ([reservation_id]) REFERENCES [Reservations]([id])
+)
+
+CREATE TABLE [dbo].[reservation_guest]
+(
+	[reservation_id] INT NOT NULL, 
+    [guest_id] INT NOT NULL, 
+    [date] DATE NOT NULL, 
+    CONSTRAINT [FK_reservation_guest_ToTable] FOREIGN KEY ([reservation_id]) REFERENCES [Reservations]([id]), 
+    CONSTRAINT [FK_reservation_guest_ToTable_1] FOREIGN KEY ([guest_id]) REFERENCES [Guests]([id])
+)
+
+CREATE TABLE [dbo].[Payments] (
+    [Id]             INT            IDENTITY (1, 1) NOT NULL,
+    [reservation_id] INT            NOT NULL,
+    [amount]         DECIMAL (6, 2) NOT NULL,
+    [numero_rate]    TINYINT        NOT NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [FK_Payments_ToTable] FOREIGN KEY ([reservation_id]) REFERENCES [dbo].[Reservations] ([Id])
+);
+
+CREATE TABLE [dbo].[Rate] (
+    [Id]         INT            IDENTITY (1, 1) NOT NULL,
+    [payment_id] INT            NOT NULL,
+    [amount ]    DECIMAL (6, 2) NOT NULL,
+    [status]     VARCHAR (10)   NOT NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [FK_Rate_ToTable] FOREIGN KEY ([payment_id]) REFERENCES [dbo].[Payments] ([Id])
+);
+
+CREATE TABLE [dbo].[Configurations] (
+    [Id]             INT            IDENTITY (1, 1) NOT NULL,
+    [reservation_id] INT            NOT NULL,
+    [bed_type]       VARBINARY (50) NOT NULL,
+    [title ]         VARCHAR (100)  NOT NULL,
+    [description]    TEXT           DEFAULT ('Descrizione non presente') NOT NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [FK_Configurations_ToTable] FOREIGN KEY ([reservation_id]) REFERENCES [dbo].[Reservations] ([Id])
+);
